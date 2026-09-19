@@ -1,0 +1,62 @@
+import { describe, expect, it } from 'vitest';
+import { add } from './string-calculator.js';
+
+describe('add', () => {
+  it('returns 0 for an empty string', () => {
+    expect(add('')).toBe(0);
+  });
+});
+
+describe('add', () => {
+  it('returns the number itself for a single number', () => {
+    expect(add('1')).toBe(1);
+  });
+});
+
+describe('add', () => {
+  it('sums two numbers separated by a comma', () => {
+    expect(add('1,2')).toBe(3);
+  });
+});
+
+describe('add', () => {
+  it('sums any amount of numbers', () => {
+    expect(add('1,2,3,4,5')).toBe(15);
+  });
+});
+
+describe('add', () => {
+  it('accepts newlines as delimiters too', () => {
+    expect(add('1\n2,3')).toBe(6);
+  });
+});
+
+describe('add', () => {
+  it('accepts a custom delimiter declared on the first line', () => {
+    expect(add('//;\n1;2')).toBe(3);
+  });
+});
+
+describe('add', () => {
+  it('throws listing every negative number found', () => {
+    expect(() => add('1,-2,-5')).toThrow('negatives not allowed: -2, -5');
+  });
+});
+
+describe('add', () => {
+  it('ignores numbers above 1000', () => {
+    expect(add('2,1001')).toBe(2);
+  });
+});
+
+describe('add', () => {
+  it('accepts a delimiter of any length', () => {
+    expect(add('//[***]\n1***2***3')).toBe(6);
+  });
+});
+
+describe('add', () => {
+  it('accepts several declared delimiters', () => {
+    expect(add('//[*][%]\n1*2%3')).toBe(6);
+  });
+});

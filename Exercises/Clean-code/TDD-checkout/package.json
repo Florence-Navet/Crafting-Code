@@ -1,0 +1,16 @@
+{
+  "name": "tdd-checkout",
+  "version": "1.0.0",
+  "description": "Checkout kata (supermarket pricing) in TypeScript, driven by TDD",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

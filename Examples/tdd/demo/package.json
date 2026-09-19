@@ -1,0 +1,16 @@
+{
+  "name": "tdd-demo",
+  "version": "1.0.0",
+  "description": "Minimal TDD environment for live demos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
