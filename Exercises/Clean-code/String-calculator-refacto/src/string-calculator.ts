@@ -18,8 +18,17 @@ export function add(numbers: string): number {
     }
     const parts = body.split(delimiter);
     let total = 0;
+    const negatives = [];
     for (const part of parts) {
-      total += Number(part);
+      if (Number(part) < 0) {
+        negatives.push(Number(part));
+      }
+      if (Number(part) <= 1000) {
+        total += Number(part);
+      }
+    }
+    if (negatives.length > 0) {
+      throw new Error('negatives not allowed: ' + negatives.join(', '));
     }
     return total;
   }
