@@ -24,11 +24,11 @@ export function add(numbers: string): number {
     return total;
   }
   if (numbers.includes(',') || numbers.includes('\n')) {
-    const parts = numbers.split(',');
+    const pList = numbers.split(',');
     let t = 0;
     const negatives = [];
-    for (const part of parts) {
-      const subParts = part.split('\n');
+    for (const p of pList) {
+      const subParts = p.split('\n');
       for (const subPart of subParts) {
         if (Number(subPart) < 0) {
           negatives.push(Number(subPart));
