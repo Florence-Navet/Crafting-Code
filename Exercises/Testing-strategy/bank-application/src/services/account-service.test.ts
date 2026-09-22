@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { AccountNotFoundError, AccountService } from './account-service.ts'
-import { StubAccountRepository } from './test/stub-account-repository.ts'
+import { StubAccountRepository } from '../test/stub-account-repository.ts'
 
 describe('AccountService.getBalance', () => {
   it('returns the amount of the account', async () => {

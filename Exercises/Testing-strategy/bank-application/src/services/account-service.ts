@@ -1,4 +1,4 @@
-import type { AccountRepository } from '../interfaces/account-repository';
+import type { AccountRepository } from '../interfaces/account-repository.ts';
 
 class AccountNotFoundError extends Error {
   constructor(accountId: number) {

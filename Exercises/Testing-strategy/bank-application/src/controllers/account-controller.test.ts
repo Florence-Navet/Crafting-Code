@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AccountService } from '../account-service.ts'
+import { AccountService } from '../services/account-service.ts'
 import { StubAccountRepository } from '../test/stub-account-repository.ts'
 import { AccountController } from './account-controller.ts'
 

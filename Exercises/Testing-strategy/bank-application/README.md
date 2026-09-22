@@ -52,7 +52,7 @@ databases:
 | Database    | Used by                     | Connection string                               |
 | ----------- | --------------------------- | ----------------------------------------------- |
 | `bank`      | `npm run dev` / `npm start` | `postgres://bank:bank@localhost:5433/bank`      |
-| `bank_test` | `npm run test:intg`         | `postgres://bank:bank@localhost:5433/bank_test` |
+| `bank_test` | `npm run test:intg` / `test:e2e` | `postgres://bank:bank@localhost:5433/bank_test` |
 
 `createPool()` in `src/db/database.ts` reads `DATABASE_URL`, falling back to the
 dev database. The integration test config sets it to `bank_test`, so tests never
@@ -155,10 +155,12 @@ src/
 │   ├── account-controller.test.ts      unit tests — id validation, stubbed repository
 │   └── account-controller.e2e.test.ts  e2e tests — 200 and 404s, real server + test database
 ├── start.ts                entry point — wires repository → service → controller, reads PORT and listens
-├── account-service.ts      AccountService — getBalance(accountId), throws AccountNotFoundError
 ├── app.test.ts             HTTP tests for /health, unknown routes and 500s — bind port 0, stubbed repository
-├── account-service.test.ts unit tests for the service, stubbed repository
-├── account-repository.ts    AccountRepository — abstract class, what the app needs from account storage
+├── services/
+│   ├── account-service.ts       AccountService — getBalance(accountId), throws AccountNotFoundError
+│   └── account-service.test.ts  unit tests for the service, stubbed repository
+├── interfaces/
+│   └── account-repository.ts    AccountRepository — abstract class, what the app needs from account storage
 ├── infrastructure/
 │   ├── postgres-account-repository.ts            PostgresAccountRepository — AccountRepository backed by Postgres
 │   └── postgres-account-repository.intg.test.ts  integration tests for the Postgres repository

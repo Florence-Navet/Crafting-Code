@@ -1,4 +1,4 @@
-import { AccountNotFoundError, type AccountService } from '../account-service.ts'
+import { AccountNotFoundError, type AccountService } from '../services/account-service.ts'
 import type { HttpResponse } from '../http.ts'
 
 type Balance = { balance: number }

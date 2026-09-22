@@ -1,7 +1,7 @@
 import type { Server } from 'node:http';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { AccountRepository } from './interfaces/account-repository.ts';
-import { AccountService } from './account-service.ts';
+import { AccountService } from './services/account-service.ts';
 import { createApp } from './app.ts';
 import { AccountController } from './controllers/account-controller.ts';
 import { StubAccountRepository } from './test/stub-account-repository.ts';
