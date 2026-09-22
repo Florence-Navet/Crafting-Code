@@ -1,14 +1,15 @@
-# Prime Factors Kata
+# Kata Prime Factors (facteurs premiers)
 
-The Prime Factors kata, popularised by Robert C. Martin ("Uncle Bob"), is one of
-the classic exercises for practising Test-Driven Development. It is short enough
-to repeat daily, yet it produces one of the most striking demonstrations of how
-an algorithm can *emerge* from tests rather than being designed up front.
+Le kata Prime Factors, popularisé par Robert C. Martin (« Uncle Bob »), est l'un
+des exercices classiques pour s'entraîner au Test-Driven Development. Il est
+assez court pour être refait tous les jours, et pourtant il offre l'une des
+démonstrations les plus frappantes de la façon dont un algorithme peut *émerger*
+des tests au lieu d'être conçu à l'avance.
 
-## The problem
+## Le problème
 
-Write a function that takes an integer `n > 1` and returns the list of its prime
-factors, in ascending order, with repetitions.
+Écrire une fonction qui prend un entier `n > 1` et renvoie la liste de ses
+facteurs premiers, dans l'ordre croissant, avec répétitions.
 
 ```
 generate(1)  -> []
@@ -21,52 +22,56 @@ generate(9)  -> [3, 3]
 generate(12) -> [2, 2, 3]
 ```
 
-## The rules of the game
+## Les règles du jeu
 
-Follow the three laws of TDD:
+Suivre les trois lois du TDD :
 
-1. Write no production code except to make a failing test pass.
-2. Write only enough of a test to demonstrate a failure (a compilation error
-   counts as a failure).
-3. Write only enough production code to make the failing test pass.
+1. N'écrire du code de production que pour faire passer un test qui échoue.
+2. N'écrire que la partie de test suffisante pour montrer un échec (une erreur
+   de compilation compte comme un échec).
+3. N'écrire que le code de production suffisant pour faire passer le test qui
+   échoue.
 
-And the red / green / refactor cycle:
+Et le cycle red / green / refactor :
 
-- **Red** — add the next smallest test; watch it fail.
-- **Green** — do the simplest thing that makes it pass, even if it feels naive.
-- **Refactor** — clean up the code *and the tests* while everything stays green.
+- **Red** — ajouter le plus petit test suivant ; le regarder échouer.
+- **Green** — faire la chose la plus simple qui le fait passer, même si ça
+  paraît naïf.
+- **Refactor** — nettoyer le code *et les tests* pendant que tout reste vert.
 
-## How to practice it
+## Comment le pratiquer
 
-Take the inputs in order (`1, 2, 3, 4, 5, 6, 8, 9, ...`) and add one test at a
-time. Resist the urge to jump ahead: the point of the kata is to notice how the
-implementation grows.
+Prendre les entrées dans l'ordre (`1, 2, 3, 4, 5, 6, 8, 9, ...`) et ajouter un
+test à la fois. Résister à l'envie de sauter des étapes : le but du kata est
+d'observer comment l'implémentation grandit.
 
-A typical progression looks like this:
+Une progression typique ressemble à ceci :
 
-1. `1` returns an empty list — the simplest possible implementation returns `[]`.
-2. `2` forces a first `if`.
-3. `3` generalises the `if` into a division by 2.
-4. `4` turns the `if` into a `while`.
-5. `6` forces a second, outer loop over candidate divisors.
-6. Around `8` and `9` the special cases collapse and the whole function becomes
-   a handful of lines.
+1. `1` renvoie une liste vide — l'implémentation la plus simple possible
+   renvoie `[]`.
+2. `2` impose un premier `if`.
+3. `3` généralise le `if` en une division par 2.
+4. `4` transforme le `if` en `while`.
+5. `6` impose une seconde boucle, externe, sur les diviseurs candidats.
+6. Vers `8` et `9`, les cas particuliers disparaissent et toute la fonction se
+   réduit à quelques lignes.
 
-The lesson: **as the tests get more specific, the code gets more generic.** By
-the end there are no `if` statements left for particular numbers — just two
-nested loops. Uncle Bob calls this the *Transformation Priority Premise* in
-action.
+La leçon : **plus les tests deviennent spécifiques, plus le code devient
+générique.** À la fin, il ne reste aucun `if` pour des nombres particuliers —
+juste deux boucles imbriquées. Uncle Bob appelle ça la *Transformation Priority
+Premise* en action.
 
-## Refactoring targets
+## Cibles de refactoring
 
-Once it is green, look for:
+Une fois que c'est vert, chercher :
 
-- a clear name for the loop variable (`divisor`, not `i`);
-- guard clauses instead of nested conditionals;
-- tests that read as a specification (table-driven tests work nicely here);
-- no duplication between test cases.
+- un nom clair pour la variable de boucle (`divisor`, pas `i`) ;
+- des clauses de garde plutôt que des conditions imbriquées ;
+- des tests qui se lisent comme une spécification (les tests pilotés par table
+  fonctionnent bien ici) ;
+- aucune duplication entre les cas de test.
 
-## Getting started
+## Pour démarrer
 
 ```bash
 npm install
@@ -75,14 +80,14 @@ npm run test:watch # red/green/refactor loop
 npm run typecheck
 ```
 
-Tests live in `src/` next to the code they exercise, in `*.test.ts` files.
-Start by renaming the placeholder test in `src/prime-factors.test.ts` and
-writing the first real assertion — then create `src/prime-factors.ts` only once
-a test demands it.
+Les tests se trouvent dans `src/`, à côté du code qu'ils testent, dans des
+fichiers `*.test.ts`. Commencer par renommer le test d'exemple dans
+`src/prime-factors.test.ts` et écrire la première vraie assertion — puis créer
+`src/prime-factors.ts` seulement quand un test l'exige.
 
-## Going further
+## Pour aller plus loin
 
-- Time yourself: the kata should eventually take under 10 minutes.
-- Try it without looking at a previous solution.
-- Try it in a different language, or with a property-based test
-  (`factors.reduce((a, b) => a * b) === n` and every factor is prime).
+- Se chronométrer : le kata devrait finir par prendre moins de 10 minutes.
+- L'essayer sans regarder une solution précédente.
+- L'essayer dans un autre langage, ou avec un test basé sur les propriétés
+  (`factors.reduce((a, b) => a * b) === n` et chaque facteur est premier).
