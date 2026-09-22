@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { add } from './string-calculator.js';
+import { add } from './string-calculator';
 
 describe('add', () => {
   it('returns 0 for an empty string', () => {
