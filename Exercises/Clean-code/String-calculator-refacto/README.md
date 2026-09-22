@@ -38,26 +38,23 @@ For requirement 7, the message must name the offenders — something like
 content. Decide the error convention (throw, or a result type) once and stay
 with it.
 
-## Where it gets interesting
+## The exercise
 
-- **Requirement 5** is the first hint that splitting on a single character is a
-  dead end. Resist generalising before requirement 6 actually asks for it.
-- **Requirement 6** splits the input into a _header_ and a _body_. Notice how
-  much simpler the rest becomes once parsing the delimiter is its own function,
-  separate from summing.
-- **Requirement 7** introduces a second responsibility — validation — into a
-  function that until now only calculated. That is a seam worth naming.
-- **Requirements 9 and 10** are cheap if delimiters are already a list, and
-  painful if they are still a character. What you did at step 6 decides which.
+### Step 1
 
-## Refactoring targets
+Applying your clean code skills, refactor the implementation of the string calculator while ensuring all tests continue to pass. Focus on readability, maintainability, and simplicity of the code.
 
-- one function that determines the delimiters, one that splits, one that sums —
-  each nameable in a few words;
-- no regex that needs a comment to be read (or: a regex with a name);
-- tests that read as the requirement table above, not as seven near-identical
-  blocks;
-- the 1000 of requirement 8 given a name, not left as a literal.
+## Step 2
+
+Push your changes on a branch with your name/pseudo.
+
+## Step 3
+
+Move to the branch of your neighbour and start implementing the following rules:
+(NB this is TDD)
+
+- Multiple of ten are doubled in your sum
+- The computation is stopped after encountering the 3rd separator
 
 ## Getting started
 
