@@ -104,6 +104,17 @@ it("totals 15 for two Yoghourt", () => {
   expect(checkout.total()).toBe(30);
 });
 
+it("totals 260 for six Apples", () => {
+  const checkout = new Checkout();
+  checkout.scan("Apple");
+  checkout.scan("Apple");
+  checkout.scan("Apple");
+  checkout.scan("Apple");
+  checkout.scan("Apple");
+  checkout.scan("Apple");
+  expect(checkout.total()).toBe(260);
+});
+
 // caisse vide 6 -> 0
 // un item pomme 6 -> 50
 // deux item pomme -> 100

@@ -5,13 +5,13 @@ export class Checkout {
   private carrotCount = 0;
 
   private applyApplePromotion() {
-    if (this.appleCount === 3) {
+    if (this.appleCount % 3 === 0) {
       this.amount -= 20;
     }
   }
 
   private applyCarrotPromotion() {
-    if (this.carrotCount === 2) {
+    if (this.carrotCount % 2 === 0) {
       this.amount -= 15;
     }
   }
