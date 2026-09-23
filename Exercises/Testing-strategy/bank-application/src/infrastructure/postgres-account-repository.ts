@@ -16,6 +16,13 @@ class PostgresAccountRepository extends AccountRepository {
 
     return row === undefined ? undefined : Number(row.amount);
   }
+
+  async updateAmountById(
+      accountId: number,
+      amount: number
+  ): Promise<void> {
+    this.accounts[accountId] = amount
+  }
 }
 
 export { PostgresAccountRepository };
