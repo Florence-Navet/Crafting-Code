@@ -1,66 +1,66 @@
 # Lint & Format
 
-Your team just inherited `order-service`. Every pull request turns into a debate about quotes, semicolons and indentation, and one test file has been silently skipping tests for weeks. Your mission: build the tooling that ends the debates and enforces the team's conventions automatically.
+Votre équipe vient d'hériter de `order-service`. Chaque pull request tourne au débat sur les guillemets, les points-virgules et l'indentation, et un fichier de test ignore silencieusement des tests depuis des semaines. Votre mission : mettre en place l'outillage qui mettra fin aux débats et appliquera automatiquement les conventions de l'équipe.
 
-You will set up **Prettier** (formatting), **ESLint** (linting), and make them cooperate.
+Vous allez configurer **Prettier** (formatage), **ESLint** (linting), et les faire coopérer harmonieusement.
 
-## Getting started
+## Pour commencer
 
-Requires Node ≥ 22.13.
+Nécessite Node ≥ 22.13.
 
 ```bash
 npm install
-npm test           # single run
+npm test           # exécution unique
 npm run test:watch
 npm run typecheck
 ```
 
-Each step below has a **goal**, some **instructions**, and a **check** you can run to know you are done. Hints are folded; open them only when stuck.
+Chaque étape ci-dessous comporte un **objectif**, des **instructions**, et une **vérification** à exécuter pour vous assurer que c'est terminé. Les indices sont repliés ; ne les ouvrez que si vous êtes bloqué(e).
 
-> **Fell behind?** Every step has a checkpoint in `solution/step-N/` containing only the files changed at that step, so checkpoints are **cumulative**: apply every step from 1 to N, in order. For example, to reach the end of step 3:
+> **En retard ?** Chaque étape dispose d'un point d'étape (checkpoint) dans `solution/step-N/` contenant uniquement les fichiers modifiés à cette étape. Les checkpoints sont donc **cumulatifs** : appliquez chaque étape de 1 à N, dans l'ordre. Par exemple, pour arriver à la fin de l'étape 3 :
 >
 > ```bash
 > for s in 1 2 3; do cp -R solution/step-$s/. .; done && npm install
 > ```
 >
-> The expected outputs quoted in the hints assume the solution's `.prettierrc` (no semicolons, single quotes, `printWidth: 100`, trailing commas); with other choices, line numbers and counts will differ.
+> Les sorties attendues mentionnées dans les indices supposent le `.prettierrc` de la solution (pas de point-virgule, guillemets simples, `printWidth: 100`, virgules finales/trailing commas) ; avec d'autres choix, les numéros de ligne et les totaux différeront.
 
 ---
 
-## Step 0 — Explore the mess (10')
+## Étape 0 — Explorer le bazar (10')
 
-Read `src/domain/order.ts`, `src/app/order-service.ts` and their tests. List every inconsistency you can find: quotes, semicolons, indentation, line length… and anything that looks like a bug waiting to happen.
+Lisez `src/domain/order.ts`, `src/app/order-service.ts` ainsi que leurs tests. Listez toutes les incohérences que vous pouvez trouver : guillemets, points-virgules, indentation, longueur de ligne… et tout ce qui ressemble à un bug en puissance.
 
-Run `npm test`. Look closely at the summary.
+Lancez `npm test`. Examinez attentivement le résumé.
 
-**Check:** tests pass. How many are skipped, and why?
+**Vérification :** les tests passent. Combien sont ignorés (*skipped*), et pourquoi ?
 
-<details><summary>Hint</summary>
+<details><summary>Indice</summary>
 
-`Tests 6 passed | 1 skipped (7)`. Look for `.only` in the test files. Which tool could stop this from ever being committed? (Look up `@vitest/eslint-plugin` and its `no-focused-tests` rule.)
+`Tests 6 passed | 1 skipped (7)`. Cherchez `.only` dans les fichiers de test. Quel outil pourrait empêcher que cela ne soit un jour commité ? (Renseignez-vous sur `@vitest/eslint-plugin` et sa règle `no-focused-tests`.)
 
 </details>
 
 ---
 
-## Step 1 — Prettier alone (15')
+## Étape 1 — Prettier seul (15')
 
-**Goal:** formatting is no longer a matter of opinion.
+**Objectif :** le formatage n'est plus une affaire d'opinion.
 
 1. `npm install -D prettier`
-2. Create `.prettierrc`. Discuss each option with your neighbour before picking a value: `semi`, `singleQuote`, `printWidth`, `trailingComma`.
-3. Create `.prettierignore` with `solution/`, `package-lock.json` and `README.md`.
-4. Add two scripts to `package.json`: `format` (`prettier --write .`) and `format:check` (`prettier --check .`).
-5. Run `npm run format:check`, then `npm run format`, then look at `git diff`.
+2. Créez `.prettierrc`. Discutez de chaque option avec votre binôme avant de choisir une valeur : `semi`, `singleQuote`, `printWidth`, `trailingComma`.
+3. Créez `.prettierignore` avec `solution/`, `package-lock.json` et `README.md`.
+4. Ajoutez deux scripts dans `package.json` : `format` (`prettier --write .`) et `format:check` (`prettier --check .`).
+5. Exécutez `npm run format:check`, puis `npm run format`, puis observez `git diff`.
 
-**Check:**
+**Vérification :**
 
 ```bash
-npm run format:check   # All matched files use Prettier code style!
-npm test               # still green: the diff is style only
+npm run format:check   # Tous les fichiers correspondants respectent le style de code Prettier !
+npm test               # toujours au vert : le diff ne concerne que le style
 ```
 
-<details><summary>Hint: expected first format:check output</summary>
+<details><summary>Indice : première sortie attendue de format:check</summary>
 
 ```text
 Checking formatting...
@@ -75,58 +75,58 @@ Checking formatting...
 
 <details><summary>Discussion</summary>
 
-- Why is `format:check` (and not `format`) the one you would run in CI?
-- Prettier has very few options on purpose. Why is that a feature?
+- Pourquoi est-ce `format:check` (et non `format`) que vous exécuteriez en CI ?
+- Prettier propose délibérément très peu d'options. En quoi est-ce un avantage ?
 
 </details>
 
 ---
 
-## Step 2 — Format on save (10')
+## Étape 2 — Formater à l'enregistrement (Format on save) (10')
 
-**Goal:** nobody ever runs `npm run format` by hand again.
+**Objectif :** plus personne n'exécute jamais `npm run format` à la main.
 
-1. Create `.vscode/settings.json` enabling `editor.formatOnSave` with Prettier (`esbenp.prettier-vscode`) as `editor.defaultFormatter`.
-2. Create `.vscode/extensions.json` recommending that extension.
+1. Créez `.vscode/settings.json` en activant `editor.formatOnSave` avec Prettier (`esbenp.prettier-vscode`) comme `editor.defaultFormatter`.
+2. Créez `.vscode/extensions.json` recommandant cette extension.
 
-**Check:** break the indentation of any line in `order.ts`, save → it is restored.
+**Vérification :** cassez l'indentation de n'importe quelle ligne dans `order.ts`, sauvegardez → elle est automatiquement restaurée.
 
 <details><summary>Discussion</summary>
 
-- Why commit `.vscode/` to the repo instead of relying on each developer's user settings?
-- Format on save and `format:check` in CI: why do you want both?
+- Pourquoi versionner (commiter) `.vscode/` dans le dépôt plutôt que de s'en remettre aux paramètres utilisateur de chaque développeur ?
+- Le formatage à l'enregistrement et `format:check` en CI : pourquoi a-t-on besoin des deux ?
 
 </details>
 
-<details><summary>Other editors</summary>
+<details><summary>Autres éditeurs</summary>
 
-- WebStorm: Settings → Languages & Frameworks → JavaScript → Prettier → "Automatic Prettier configuration" + "Run on save".
-- Neovim: `conform.nvim` with the `prettier` formatter and `format_on_save`.
+- WebStorm : Paramètres → Langages et frameworks → JavaScript → Prettier → « Configuration automatique de Prettier » + « Exécuter à l'enregistrement ».
+- Neovim : `conform.nvim` avec le formateur `prettier` et `format_on_save`.
 
 </details>
 
 ---
 
-## Step 3 — ESLint basics (20')
+## Étape 3 — Les bases d'ESLint (20')
 
-**Goal:** catch bugs, not style.
+**Objectif :** détecter les bugs, pas le style.
 
 1. `npm install -D eslint @eslint/js typescript-eslint`
-2. Create `eslint.config.js` (flat config) with `{ ignores: ['solution/**'] }`, `js.configs.recommended` and `tseslint.configs.recommended`, wrapped in `defineConfig` from `eslint/config`.
-3. Add a `lint` script: `eslint .` in the package.json
-4. Run `npm run lint` and read each message.
-5. Using the ESlint doc: https://eslint.org/docs/latest/rules/
-   Add a config block with team rules: `eqeqeq` as `error`, `no-console` as `warn`. Run again.
-6. Fix everything. The `console.info` audit line is legitimate: keep it with a disable comment that explains **why**.
+2. Créez `eslint.config.js` (*flat config*) avec `{ ignores: ['solution/**'] }`, `js.configs.recommended` et `tseslint.configs.recommended`, enveloppés dans `defineConfig` issu de `eslint/config`.
+3. Ajoutez un script `lint` : `eslint .` dans le `package.json`.
+4. Exécutez `npm run lint` et lisez chaque message.
+5. En utilisant la doc d'ESLint : https://eslint.org/docs/latest/rules/
+   Ajoutez un bloc de configuration avec les règles d'équipe : `eqeqeq` en `error`, `no-console` en `warn`. Relancez.
+6. Corrigez tout. La ligne d'audit avec `console.info` est légitime : conservez-la avec un commentaire de désactivation expliquant **pourquoi**.
 
-**Check:**
+**Vérification :**
 
 ```bash
-npm run lint   # no output, exit code 0
+npm run lint   # aucune sortie, code de retour 0
 npm test
 ```
 
-<details><summary>Hint: expected output with recommended rules only</summary>
+<details><summary>Indice : sortie attendue avec uniquement les règles recommandées</summary>
 
 ```text
 src/app/order-service.ts
@@ -141,7 +141,7 @@ src/domain/order.ts
 
 </details>
 
-<details><summary>Hint: expected output after adding team rules</summary>
+<details><summary>Indice : sortie attendue après l'ajout des règles d'équipe</summary>
 
 ```text
 src/app/order-service.ts
@@ -157,58 +157,58 @@ src/domain/order.ts
 ✖ 6 problems (4 errors, 2 warnings)
 ```
 
-`OrderLine` is imported but unused because `add` takes `line: any` instead: fixing the `any` fixes both.
+`OrderLine` est importé mais inutilisé car `add` prend `line: any` à la place : corriger le type `any` résout les deux problèmes.
 
 </details>
 
-<details><summary>Hint: disable comment syntax</summary>
+<details><summary>Indice : syntaxe du commentaire de désactivation</summary>
 
 ```ts
-// eslint-disable-next-line no-console -- audit trail required by finance
+// eslint-disable-next-line no-console -- piste d'audit exigée par la finance
 ```
 
 </details>
 
 <details><summary>Discussion</summary>
 
-- `off` / `warn` / `error`: warnings do not fail `npm run lint`. When would you add `--max-warnings 0`?
-- Why is a disable comment without a reason a smell?
-- `tsconfig.json` has `noUnusedLocals: false` on purpose. Compiler or linter: who should own this check?
+- `off` / `warn` / `error` : les avertissements (*warnings*) ne font pas échouer `npm run lint`. Quand ajouteriez-vous `--max-warnings 0` ?
+- Pourquoi un commentaire de désactivation sans justification est-il un *code smell* ?
+- `tsconfig.json` contient `noUnusedLocals: false` à dessein. Compilateur ou linter : qui devrait être responsable de cette vérification ?
 
 </details>
 
 ---
 
-## Step 4 — The conflict (15')
+## Étape 4 — Le conflit (15')
 
-**Goal:** understand why linters and formatters fight, and stop the fight.
+**Objectif :** comprendre pourquoi linters et formateurs entrent en conflit, et désamorcer le conflit.
 
-1. `npm install -D @stylistic/eslint-plugin` and add a block enabling `@stylistic/quotes` with the quote style **opposite** to your `.prettierrc` (e.g. `'@stylistic/quotes': ['error', 'double']` if you chose `singleQuote: true`).
-2. Run `npm run lint -- --fix`, then `npm run format:check`. Then `npm run format`, then `npm run lint`. What happens?
-3. `npm install -D eslint-config-prettier`: https://www.npmjs.com/package/eslint-config-prettier and add `eslintConfigPrettier` (from `eslint-config-prettier/flat`) as the **last** entry of your config.
-4. Extend `.vscode/settings.json` with `"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" }`, and recommend `dbaeumer.vscode-eslint` in `extensions.json`.
+1. `npm install -D @stylistic/eslint-plugin` et ajoutez un bloc activant `@stylistic/quotes` avec le style de guillemets **opposé** à celui de votre `.prettierrc` (par exemple `'@stylistic/quotes': ['error', 'double']` si vous avez choisi `singleQuote: true`).
+2. Exécutez `npm run lint -- --fix`, puis `npm run format:check`. Ensuite `npm run format`, puis `npm run lint`. Que se passe-t-il ?
+3. `npm install -D eslint-config-prettier` : https://www.npmjs.com/package/eslint-config-prettier et ajoutez `eslintConfigPrettier` (provenant de `eslint-config-prettier/flat`) comme **dernière** entrée de votre configuration.
+4. Complétez `.vscode/settings.json` avec `"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" }`, et recommandez `dbaeumer.vscode-eslint` dans `extensions.json`.
 
-**Check:** both sequences are stable.
+**Vérification :** les deux séquences sont stables.
 
 ```bash
 npm run format && npm run lint
 npm run lint -- --fix && npm run format:check
 ```
 
-<details><summary>Hint: what the fight looks like</summary>
+<details><summary>Indice : à quoi ressemble le conflit</summary>
 
 ```text
 ✖ 54 problems (54 errors, 0 warnings)
   54 errors and 0 warnings potentially fixable with the `--fix` option.
 ```
 
-`lint --fix` rewrites every string to double quotes, then `format` puts them back to single quotes, then `lint` complains again. Forever.
+`lint --fix` réécrit chaque chaîne avec des guillemets doubles, puis `format` les remet en guillemets simples, puis `lint` râle à nouveau. À l'infini.
 
 </details>
 
-<details><summary>Hint: order matters</summary>
+<details><summary>Indice : l'ordre a son importance</summary>
 
-Flat config entries apply top to bottom; a later entry overrides an earlier one. If `eslintConfigPrettier` is not last, the rules it turns off can be turned back on by the entries after it. Try moving it above the `@stylistic` block:
+Les entrées de la *flat config* s'appliquent de haut en bas ; une entrée plus bas surcharge une entrée précédente. Si `eslintConfigPrettier` n'est pas en dernière position, les règles qu'elle désactive peuvent être réactivées par les entrées suivantes. Essayez de la déplacer au-dessus du bloc `@stylistic` :
 
 ```text
 ✖ 55 problems (55 errors, 0 warnings)
@@ -219,6 +219,6 @@ Flat config entries apply top to bottom; a later entry overrides an earlier one.
 
 <details><summary>Discussion</summary>
 
-The rule of thumb: **the formatter owns style, the linter owns correctness.** Can you think of a rule that sits on the boundary?
+La règle d'or : **le formateur gère le style, le linter gère l'exactitude du code (la correction).** Pouvez-vous penser à une règle qui se situe à la frontière des deux ?
 
 </details>

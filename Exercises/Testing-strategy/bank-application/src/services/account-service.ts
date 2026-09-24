@@ -13,8 +13,8 @@ class AccountService {
   private readonly accountHolderRepository: AccountHolderRepository
 
   constructor(
-    accountRepository: AccountRepository,
-    accountHolderRepository: AccountHolderRepository
+      accountRepository: AccountRepository,
+      accountHolderRepository: AccountHolderRepository
   ) {
     this.accountRepository = accountRepository
     this.accountHolderRepository = accountHolderRepository
@@ -32,7 +32,7 @@ class AccountService {
 
   async getFirstName(accountId: number): Promise<string> {
     const firstName =
-      await this.accountHolderRepository.getFirstNameByAccountId(accountId)
+        await this.accountHolderRepository.getFirstNameByAccountId(accountId)
 
     if (firstName === undefined) {
       throw new AccountNotFoundError(accountId)
@@ -43,32 +43,13 @@ class AccountService {
 
   async getLastName(accountId: number): Promise<string> {
     const lastName =
-      await this.accountHolderRepository.getLastNameByAccountId(accountId)
+        await this.accountHolderRepository.getLastNameByAccountId(accountId)
 
     if (lastName === undefined) {
       throw new AccountNotFoundError(accountId)
     }
 
     return lastName
-  }
-
-  async transferMoney(
-      fromAccountId: number,
-      toAccountId: number,
-      amount: number
-  ) {
-    const fromAmount = await this.getBalance(fromAccountId)
-    const toAmount = await this.getBalance(toAccountId)
-
-    await this.accountRepository.updateAmountById(
-        fromAccountId,
-        fromAmount - amount
-    )
-
-    await this.accountRepository.updateAmountById(
-        toAccountId,
-        toAmount + amount
-    )
   }
 }
 

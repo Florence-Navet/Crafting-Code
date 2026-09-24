@@ -4,18 +4,20 @@ import { StubAccountRepository } from '../test/stub-account-repository.ts'
 import { StubAccountHolderRepository } from '../test/StubAccountHolderRepository.ts'
 
 
-describe('AccountService.getBalance', () => {
+describe('AccountService', () => {
   it('returns the amount of the account', async () => {
-    const accountService = new AccountService(
-      new StubAccountRepository({ 1: 1000, 2: 250.5 })
+      const accountService = new AccountService(
+          new StubAccountRepository({ 1: 1000, 2: 250.5 }),
+          new StubAccountHolderRepository()
     )
 
     expect(await accountService.getBalance(2)).toBe(250.5)
   })
 
   it('throws AccountNotFoundError when the account does not exist', async () => {
-    const accountService = new AccountService(
-      new StubAccountRepository()
+      const accountService = new AccountService(
+          new StubAccountRepository(),
+          new StubAccountHolderRepository()
     )
 
     await expect(accountService.getBalance(999))
@@ -51,22 +53,4 @@ describe('AccountService.getBalance', () => {
     expect(await accountService.getLastName(1)).toBe('Doe')
   })
 
-    it('transfers money between two accounts', async () => {
-        const accountRepository = new StubAccountRepository({
-            1: 1000,
-            2: 250
-        })
-
-        const accountService = new AccountService(
-            accountRepository,
-            new StubAccountHolderRepository()
-        )
-
-        await accountService.transferMoney(1, 2, 200)
-
-        expect(await accountService.getBalance(1)).toBe(800)
-        expect(await accountService.getBalance(2)).toBe(450)
-
-
-    })
 })
