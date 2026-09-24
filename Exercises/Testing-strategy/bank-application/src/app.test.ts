@@ -1,29 +1,46 @@
 import type { Server } from 'node:http';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { AccountRepository } from './interfaces/account-repository.ts';
+import {
+  AccountRepository,
+  type Account,
+} from './interfaces/account-repository.ts';
+import { StubUserRepository } from './test/stub-user-repository.ts'
 import { AccountService } from './services/account-service.ts';
 import { createApp } from './app.ts';
 import { AccountController } from './controllers/account-controller.ts';
 import { StubAccountRepository } from './test/stub-account-repository.ts';
 
+
 class FailingAccountRepository extends AccountRepository {
-  async getAmountById(): Promise<number | undefined> {
-    throw new Error('database is down');
+  async getAccountById(): Promise<Account | undefined> {
+    throw new Error('database is down')
   }
 }
 
-async function startServer(accountRepository: AccountRepository): Promise<{ server: Server; baseUrl: string }> {
-  const server = createApp(new AccountController(new AccountService(accountRepository)));
-  await new Promise<void>(resolve => server.listen(0, resolve));
+async function startServer(
+    accountRepository: AccountRepository,
+): Promise<{ server: Server; baseUrl: string }> {
+  const userRepository = new StubUserRepository({})
 
-  const address = server.address();
+  const server = createApp(
+      new AccountController(
+          new AccountService(accountRepository, userRepository)
+      )
+  )
+
+  await new Promise<void>(resolve => server.listen(0, resolve))
+
+  const address = server.address()
+
   if (address === null || typeof address === 'string') {
-    throw new Error('Server is not listening on a TCP port');
+    throw new Error('Server is not listening on a TCP port')
   }
 
-  return { server, baseUrl: `http://localhost:${address.port}` };
+  return {
+    server,
+    baseUrl: `http://localhost:${address.port}`,
+  }
 }
-
 async function stopServer(server: Server): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     server.close(error => (error === undefined ? resolve() : reject(error)));

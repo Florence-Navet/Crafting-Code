@@ -4,7 +4,7 @@ import { respondWithJson } from './http.ts';
 
 type Health = { status: 'ok'; uptimeInSeconds: number };
 
-const ACCOUNT_BALANCE_PATH = /^\/accounts\/(\d+)$/;
+const ACCOUNT_BALANCE_PATH = /^\/accounts\/(\d+)\/balance$/
 
 function createApp(accountController: AccountController): Server {
   return createServer(async (request, response) => {

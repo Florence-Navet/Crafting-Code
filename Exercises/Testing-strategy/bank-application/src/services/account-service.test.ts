@@ -9,7 +9,8 @@ describe('AccountService.getBalance', () => {
       1: {
         balance: 1000,
         userId: 1,
-      },
+11
+      1   },
       2: { balance: 250.5, userId: 2 },
     });
     const stubUserRepository = new StubUserRepository({

@@ -7,7 +7,7 @@ services:
       POSTGRES_DB: bank
     ports:
       # 5433 on the host so it does not collide with another local Postgres on 5432
-      - 5433:5432
+      - 5434:5432
     volumes:
       - postgresql-data:/var/lib/postgresql/data
       # Scripts here run once, when the data volume is first created
